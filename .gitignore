@@ -1,0 +1,6 @@
+*.pyc
+__pycache__
+functions_graph.sqlite3
+.DS_Store
+.idea
+/venv
