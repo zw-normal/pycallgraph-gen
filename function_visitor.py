@@ -76,13 +76,15 @@ class FunctionCallVisitor(ast.NodeVisitor):
                 func_call = FunctionCall(
                     caller_id=self.caller_def.id,
                     callee_id=callee_defs[0].id,
+                    line_no=node.lineno,
                     exact_call=True)
                 self.session.add(func_call)
             else:
                 for callee_def in callee_defs:
                     func_call = FunctionCall(
                         caller_id=self.caller_def.id,
-                        callee_id=callee_def.id)
+                        callee_id=callee_def.id,
+                        line_no=node.lineno)
                     self.session.add(func_call)
         self.generic_visit(node)
 
