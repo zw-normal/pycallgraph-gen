@@ -1,6 +1,8 @@
 *.pyc
 __pycache__
 functions_graph.sqlite3
+function_config.py
 .DS_Store
 .idea
 /venv
+/venv27

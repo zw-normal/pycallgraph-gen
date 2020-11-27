@@ -5,5 +5,5 @@ source_roots = (
 
 # Exclude folders
 exclude_folders = (
-    'venv', 'xtest', 'test',
+    'venv', 'venv27', 'xtest', 'test',
 )
