@@ -17,6 +17,10 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 
+def get_relative_source_file(source_root, source_file):
+    return source_file[len(source_root)+1:].replace(os.path.sep, '/')
+
+
 def get_module_name(source_root, source_file):
     return source_file[len(source_root)+1:-3].replace(os.path.sep, '.')
 
@@ -32,10 +36,12 @@ def scan_source_files(visitor_cls):
                         ast_tree = ast.parse(source.read())
                         with Session(engine) as session:
                             visitor = visitor_cls(
-                                session, source.name,
+                                session,
+                                get_relative_source_file(source_root, source.name),
                                 get_module_name(source_root, source.name))
                             visitor.visit(ast_tree)
                             session.commit()
+
 
 if __name__ == '__main__':
     scan_source_files(FunctionDefVisitorPhase1)
