@@ -1,6 +1,6 @@
 # Roots path of the python source code
 source_roots = (
-    'C:\\Programming\\Python\\coveragepy\\coverage',
+    '/Users/weizheng/Programming/Python/coveragepy',
 )
 
 # Exclude folders

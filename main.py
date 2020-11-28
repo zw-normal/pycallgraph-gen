@@ -5,7 +5,9 @@ import fnmatch
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from function_def import Base
+from db_base import Base
+from function_def import FunctionNode
+from function_call import FunctionCall
 from function_config import source_roots, exclude_folders
 from function_visitor import FunctionDefVisitorPhase1, FunctionDefVisitorPhase2
 

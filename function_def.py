@@ -2,11 +2,10 @@ import ast
 import sys
 import enum
 
-from sqlalchemy import Column, Integer, String, Enum, UniqueConstraint, select, Index
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, Enum, UniqueConstraint, select
 
+from db_base import Base
 
-Base = declarative_base()
 
 class FunctionNodeType(enum.Enum):
     Normal = 1
@@ -135,7 +134,7 @@ def get_function_def_node(session, source_file, line_no, column_offset):
 
 def get_function_callee_def_nodes(session, func_name, args_length):
     stmt = (select(FunctionNode).
-            where(FunctionNode.func_name==func_name,
-                  FunctionNode.min_args<=args_length,
-                  FunctionNode.max_args>=args_length))
+            where(FunctionNode.func_name == func_name,
+                  FunctionNode.min_args <= args_length,
+                  FunctionNode.max_args >= args_length))
     return session.execute(stmt).scalars().all()
