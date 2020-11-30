@@ -4,34 +4,44 @@ from function_def import FunctionNode, get_function_def_node, get_function_calle
 from function_call import FunctionCall
 
 
+class ClassDefVisitor(ast.NodeVisitor):
+
+    def __init__(self, session, source_file, module_name, class_name):
+        self.session = session
+        self.source_file = source_file
+        self.module_name = module_name
+        self.class_name = class_name
+
+    def visit_FunctionDef(self, node):
+        if node.name == '__init__':
+            func_node = FunctionNode.from_class_constructor(
+                self.source_file, self.module_name, self.class_name, node)
+        else:
+            func_node = FunctionNode.from_def_node(
+                self.source_file, self.module_name, node.name, node)
+        self.session.add(func_node)
+
+        self.generic_visit(node)
+
+
 class FunctionDefVisitorPhase1(ast.NodeVisitor):
 
     def __init__(self, session, source_file, module_name):
         self.session = session
         self.source_file = source_file
         self.module_name = module_name
-        self.class_name = ''
 
     def visit_FunctionDef(self, node):
-        if node.name != '__init__':
-            # The visit_ClassDef handles the constructor
-            func_node = FunctionNode.from_def_node(
-                self.source_file, self.module_name, self.class_name, node)
-            self.session.add(func_node)
+        func_node = FunctionNode.from_def_node(
+            self.source_file, self.module_name, '', node)
+        self.session.add(func_node)
+
         self.generic_visit(node)
 
     def visit_ClassDef(self, node):
-        # The following visit_FunctionDef is in this class
-        self.class_name = node.name
-
-        for method in (member for member in node.body if isinstance(member, ast.FunctionDef)):
-            if method.name == '__init__':
-                func_node = FunctionNode.from_class_constructor(
-                    self.source_file, self.module_name, node.name, method)
-                self.session.add(func_node)
-                break
-
-        self.generic_visit(node)
+        ClassDefVisitor(
+            self.session, self.source_file,
+            self.module_name, node.name).visit(node)
 
 
 class FunctionDefVisitorPhase2(ast.NodeVisitor):
