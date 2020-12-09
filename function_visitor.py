@@ -18,7 +18,7 @@ class ClassDefVisitor(ast.NodeVisitor):
                 self.source_file, self.module_name, self.class_name, node)
         else:
             func_node = FunctionNode.from_def_node(
-                self.source_file, self.module_name, node.name, node)
+                self.source_file, self.module_name, self.class_name, node)
         self.session.add(func_node)
 
         self.generic_visit(node)
